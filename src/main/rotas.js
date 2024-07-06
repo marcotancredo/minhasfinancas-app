@@ -1,38 +1,34 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 
-import {Route, Routes, HashRouter} from 'react-router-dom'
+import {HashRouter, Outlet, Route, Routes, useNavigate} from 'react-router-dom'
 import Login from '../views/login'
 import CadastroUsuario from '../views/cadastroUsuario'
 import Home from "../views/home";
 import ConsultaLancamentos from "../views/lancamentos/consulta-lancamentos";
 import CadastroLancamentos from "../views/lancamentos/cadastro-lancamentos";
-import AuthService from "../app/service/authService";
-
-import { useNavigate, Outlet } from 'react-router-dom';
-import { useEffect } from 'react';
+import {AuthConsumer} from "./provedorAutenticacao";
 
 
-
-function RotaAutenticada () {
+function RotaAutenticada (isUsuarioAutenticado) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!AuthService.isUsuarioAutenticado()) {
+        if (!isUsuarioAutenticado) {
             navigate('/login');
         }
-    }, [navigate]);
+    }, [navigate, isUsuarioAutenticado]);
 
-    return AuthService.isUsuarioAutenticado() ? <Outlet /> : null;
+    return isUsuarioAutenticado ? <Outlet /> : null;
 }
 
 
-function Rotas() {
+function Rotas(props) {
     return (
         <HashRouter>
             <Routes>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/cadastro-usuarios" element={<CadastroUsuario/>}/>
-                <Route element={<RotaAutenticada/>}>
+                <Route element={<RotaAutenticada isUsuarioAutenticado={props.isUsuarioAutenticado}/>}>
                     <Route path="/home" element={<Home />}></Route>
                     <Route path="/consulta-lancamentos" element={<ConsultaLancamentos/>}/>
                     <Route path="/cadastro-lancamentos/:id?" element={<CadastroLancamentos/>}/>
@@ -42,4 +38,8 @@ function Rotas() {
     )
 }
 
-export default Rotas;
+export default () => (
+    <AuthConsumer>
+        {(context) => (<Rotas isUsuarioAutenticado={context.isAutenticado}/>)}
+    </AuthConsumer>
+);
