@@ -1,6 +1,10 @@
 export default class LocalStorageService {
-    static adicionarItem(chave, valor) {
+    static adicionarItemParseString(chave, valor) {
         localStorage.setItem(chave, JSON.stringify(valor));
+    };
+
+    static adicionarItem(chave, valor) {
+        localStorage.setItem(chave, valor);
     };
 
     static obterItemString(chave) {

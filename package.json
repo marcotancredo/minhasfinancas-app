@@ -2,6 +2,7 @@
   "name": "minhas-financas-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -10,6 +11,7 @@
     "bootswatch": "^5.3.3",
     "classnames": "^2.5.1",
     "currency-formatter": "^1.5.9",
+    "jwt-decode": "^4.0.0",
     "primeicons": "^7.0.0",
     "primereact": "^10.6.6",
     "react": "^18.3.1",
@@ -21,7 +23,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "env-cmd -f ./.env react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -43,5 +45,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "env-cmd": "^10.1.0"
   }
 }

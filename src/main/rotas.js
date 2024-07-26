@@ -1,40 +1,43 @@
 import React, {useEffect} from 'react'
 
-import {HashRouter, Outlet, Route, Routes, useNavigate} from 'react-router-dom'
+import {BrowserRouter, Outlet, Route, Routes, useNavigate} from 'react-router-dom'
+import {AuthConsumer} from "./provedorAutenticacao";
+
 import Login from '../views/login'
 import CadastroUsuario from '../views/cadastroUsuario'
 import Home from "../views/home";
 import ConsultaLancamentos from "../views/lancamentos/consulta-lancamentos";
 import CadastroLancamentos from "../views/lancamentos/cadastro-lancamentos";
-import {AuthConsumer} from "./provedorAutenticacao";
+import LandingPage from "../views/landingPage";
 
 
-function RotaAutenticada (isUsuarioAutenticado) {
+function RotaAutenticada(props) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!isUsuarioAutenticado) {
+        if (!props.isUsuarioAutenticado) {
             navigate('/login');
         }
-    }, [navigate, isUsuarioAutenticado]);
+    }, [navigate, props.isUsuarioAutenticado]);
 
-    return isUsuarioAutenticado ? <Outlet /> : null;
+    return props.isUsuarioAutenticado ? <Outlet/> : null;
 }
 
 
 function Rotas(props) {
     return (
-        <HashRouter>
+        <BrowserRouter>
             <Routes>
-                <Route path="/login" element={<Login/>}/>
-                <Route path="/cadastro-usuarios" element={<CadastroUsuario/>}/>
-                <Route element={<RotaAutenticada isUsuarioAutenticado={props.isUsuarioAutenticado}/>}>
-                    <Route path="/home" element={<Home />}></Route>
-                    <Route path="/consulta-lancamentos" element={<ConsultaLancamentos/>}/>
-                    <Route path="/cadastro-lancamentos/:id?" element={<CadastroLancamentos/>}/>
+                <Route exact path="/" element={<LandingPage/>}/>
+                <Route exact path="/login" element={<Login/>}/>
+                <Route exact path="/cadastro-usuarios" element={<CadastroUsuario/>}/>
+                <Route exact element={<RotaAutenticada isUsuarioAutenticado={props.isUsuarioAutenticado}/>}>
+                    <Route exact path="/home" element={<Home/>}></Route>
+                    <Route exact path="/consulta-lancamentos" element={<ConsultaLancamentos/>}/>
+                    <Route exact path="/cadastro-lancamentos/:id?" element={<CadastroLancamentos/>}/>
                 </Route>
             </Routes>
-        </HashRouter>
+        </BrowserRouter>
     )
 }
 
